@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,17 +62,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User with specified ID not found"));
+        Optional<User> optional = userRepository.findById(id);
+        if (optional.isPresent()) {
+            userRepository.deleteById(id);
+            User deletedUser = optional.get();
 
-        String email = user.getEmail();
-        String name = user.getName();
-        userRepository.deleteById(id);
-        kafkaProducerService.sendNotification(
-                OperationType.DELETE,
-                email,
-                name
-        );
+            String email = deletedUser.getEmail();
+            String name = deletedUser.getName();
+            userRepository.deleteById(id);
+            kafkaProducerService.sendNotification(
+                    OperationType.DELETE,
+                    email,
+                    name
+            );
+        } else {
+            throw new RuntimeException("User with specified ID not found");
+        }
     }
 
     @Override

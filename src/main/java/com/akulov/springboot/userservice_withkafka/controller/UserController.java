@@ -26,7 +26,11 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.findUserById(id));
+        try {
+            return ResponseEntity.ok(userService.findUserById(id));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/users")
@@ -39,14 +43,22 @@ public class UserController {
 
     @PutMapping("/users/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDto) {
-        UserDto updatedUserDto = userService.updateUser(id, userDto);
-        return ResponseEntity.ok(updatedUserDto);
+        try {
+            UserDto updatedUserDto = userService.updateUser(id, userDto);
+            return ResponseEntity.ok(updatedUserDto);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUserById(id);
-        return ResponseEntity.noContent().build();
+        try {
+            userService.deleteUserById(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/users/name/{name}")
