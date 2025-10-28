@@ -32,6 +32,9 @@
     * [kafka_producer_config](https://github.com/MikhailAkulov/springboot_user-service_with_kafka/blob/main/src/main/java/com/akulov/springboot/userservice_withkafka/configuration/KafkaProducerConfig.java)
     * [точка входа](https://github.com/MikhailAkulov/springboot_user-service_with_kafka/blob/main/src/main/java/com/akulov/springboot/userservice_withkafka/UserServiceWithKafkaApplication.java)
     * [properties](https://github.com/MikhailAkulov/springboot_user-service_with_kafka/blob/main/src/main/resources/application.properties)
+    * тесты:
+      * [UserControllerTest](https://github.com/MikhailAkulov/springboot_user-service_with_kafka/blob/main/src/test/java/com/akulov/springboot/userservice_withkafka/controller/UserControllerTest.java) - unit-тесты ручек контроллера
+      * [UserControllerIntegrationTest](https://github.com/MikhailAkulov/springboot_user-service_with_kafka/blob/main/src/test/java/com/akulov/springboot/userservice_withkafka/integration/UserControllerIntegrationTest.java) - проверка отправки уведомлений Kafka
 * Директория [notification-service](https://github.com/MikhailAkulov/springboot_kafka_notification-service/tree/main/src/main/java/com/akulov/springboot/notificationservice)
 * Прямые ссылки:
     * [kafka_consumer_config](https://github.com/MikhailAkulov/springboot_kafka_notification-service/blob/main/src/main/java/com/akulov/springboot/notificationservice/configuration/KafkaConsumerConfig.java)
@@ -45,4 +48,7 @@
     * [интеграционные_тесты_контроллера](https://github.com/MikhailAkulov/springboot_kafka_notification-service/blob/main/src/test/java/com/akulov/springboot/notificationservice/controller/KafkaControllerIntegrationTest.java)
     * [интергационные_тесты_отправки_уведомлений](https://github.com/MikhailAkulov/springboot_kafka_notification-service/blob/main/src/test/java/com/akulov/springboot/notificationservice/integration/NotificationServiceIntegrationTest.java)
     * [properties](https://github.com/MikhailAkulov/springboot_kafka_notification-service/blob/main/src/main/resources/application.properties)
+    * тесты:
+      * [KafkaControllerIntegrationTest](https://github.com/MikhailAkulov/springboot_kafka_notification-service/blob/main/src/test/java/com/akulov/springboot/notificationservice/controller/KafkaControllerIntegrationTest.java)
+      * [NotificationServiceIntegrationTest](https://github.com/MikhailAkulov/springboot_kafka_notification-service/blob/main/src/test/java/com/akulov/springboot/notificationservice/integration/NotificationServiceIntegrationTest.java)
 
