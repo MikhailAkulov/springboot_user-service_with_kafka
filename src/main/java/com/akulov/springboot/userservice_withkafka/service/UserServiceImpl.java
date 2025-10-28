@@ -64,7 +64,6 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long id) {
         Optional<User> optional = userRepository.findById(id);
         if (optional.isPresent()) {
-            userRepository.deleteById(id);
             User deletedUser = optional.get();
 
             String email = deletedUser.getEmail();
