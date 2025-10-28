@@ -107,6 +107,7 @@ class UserControllerTest {
         ));
     }
 
+    @DisplayName("PUT /api/users/{id} — успешное обновление пользователя")
     @Test
     void testUpdateUserSuccess() throws Exception {
         UserDto update = new UserDto();
@@ -125,6 +126,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("Johnny"));
     }
 
+    @DisplayName("PUT /api/users/{id} — обновление пользователя, возвращает 404, если пользователь не найден")
     @Test
     void testUpdateUserNotFound() throws Exception {
         UserDto update = new UserDto();
@@ -143,6 +145,7 @@ class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @DisplayName("DELETE /api/users/{id} — успешное удаление пользователя")
     @Test
     void testDeleteUserSuccess() throws Exception {
         mockMvc.perform(delete("/api/users/1"))
@@ -151,6 +154,7 @@ class UserControllerTest {
         Mockito.verify(userService).deleteUserById(1L);
     }
 
+    @DisplayName("DELETE /api/users/{id} — удаление пользователя, возвращает 404, если пользователь не найден")
     @Test
     void testDeleteUserNotFound() throws Exception {
         Mockito.doThrow(new RuntimeException("User with specified ID not found"))
@@ -160,6 +164,7 @@ class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @DisplayName("GET /api/users/{name} — получение списка всех пользователей определённого имени")
     @Test
     void testGetAllUsersByNameSuccess() throws Exception {
         Mockito.when(userService.findAllUsersByName("John")).thenReturn(List.of(userDto));
@@ -169,6 +174,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[0].name").value("John"));
     }
 
+    @DisplayName("GET /api/users/{name} — проверка длины списка при получении списка опредёленного имени")
     @Test
     void testLengthOfListWhenGetAllUsersByName() throws Exception {
         UserDto secondJohn = new UserDto();
@@ -185,6 +191,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
+    @DisplayName("GET /api/users/{name} — проверка получения пустого списка при запросе по несуществующему имени")
     @Test
     void testEmptyListWhenGetAllUsersByNonExistingName() throws Exception {
         Mockito.when(userService.findAllUsersByName("Nemo")).thenReturn(List.of());
