@@ -4,6 +4,7 @@ import com.akulov.springboot.userservice_withkafka.dto.UserDto;
 import com.akulov.springboot.userservice_withkafka.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -44,6 +44,7 @@ class UserControllerTest {
         userDto.setCreatedAt(LocalDateTime.of(2025, 10, 12, 16, 24));
     }
 
+    @DisplayName("GET /api/users — получение списка всех пользователей")
     @Test
     void testGetAllUsers() throws Exception {
         Mockito.when(userService.findAllUsers()).thenReturn(List.of(userDto));
@@ -54,6 +55,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[0].name").value("John"));
     }
 
+    @DisplayName("GET /api/users/{id} — получение пользователя по id")
     @Test
     void testGetUserByIdSuccess() throws Exception {
         Mockito.when(userService.findUserById(1L)).thenReturn(userDto);
@@ -63,6 +65,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email").value("john@example.com"));
     }
 
+    @DisplayName("GET /api/users/{id} — возвращает 404, если пользователь не найден")
     @Test
     void testGetUserByIdNotFound() throws Exception {
         Mockito.when(userService.findUserById(999L))
@@ -72,28 +75,36 @@ class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @DisplayName("POST /api/users — добавление нового пользователя")
     @Test
     void testAddUser() throws Exception {
-        UserDto toCreateDto = new UserDto();
-        toCreateDto.setName("Dave");
-        toCreateDto.setEmail("dave@example.com");
-        toCreateDto.setAge(22);
+        UserDto requestDto = new UserDto();
+        requestDto.setName("Dave");
+        requestDto.setEmail("dave@example.com");
+        requestDto.setAge(22);
 
-        UserDto createdDto = new UserDto();
-        createdDto.setId(2L);
-        createdDto.setName("Dave");
-        createdDto.setEmail("dave@example.com");
-        createdDto.setAge(22);
-        createdDto.setCreatedAt(LocalDateTime.now());
+        UserDto savedDto = new UserDto();
+        savedDto.setId(2L);
+        savedDto.setName("Dave");
+        savedDto.setEmail("dave@example.com");
+        savedDto.setAge(22);
+        savedDto.setCreatedAt(LocalDateTime.now());
 
-        Mockito.when(userService.addUser(any(UserDto.class))).thenReturn(createdDto);
+        Mockito.when(userService.addUser(any(UserDto.class))).thenReturn(savedDto);
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(toCreateDto)))
+                        .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/api/users/2"))
-                .andExpect(jsonPath("$.id").value(2));
+                .andExpect(jsonPath("$.id").value(2))
+                .andExpect(jsonPath("$.name").value("Dave"))
+                .andExpect(jsonPath("$.email").value("dave@example.com"));
+
+        Mockito.verify(userService, Mockito.times(1))
+                .addUser(argThat(dto ->
+                dto.getName().equals("Dave") && dto.getEmail().equals("dave@example.com") && dto.getAge() == 22
+        ));
     }
 
     @Test
